@@ -1,0 +1,59 @@
+//Timothy Young, CS202, Program 5
+//This file contains the main script(test) of an OO framework designed to allow clients to add services..
+//to a balanced binary search tree(AVL tree). It has been updated from program 4 to allow clients to create
+//a search log consisting as a linear linked list of arrays. The search log interacts with the tree and looks
+//for matching objects. If a match is found, the search record is deleted from the list and the new list is
+//displayed for the client. Postings in the tree are intended to be loaded on a monthly basis and should not be deleted
+//unless the client chooses to do so using the functions provided in program4. Program5 uses a self-similar hierarchy
+//to program4 but is much simpler in terms of specialization. This is intended so that clients posting services can
+//specialize their postings. Clients searching for postings only need a few key details in comparison. The dynamic
+//binding taking place allows the client to call functions using a base class pointer(general_tree/general_list).
+//This allows for a consistent and organized re-usability of code.
+package Program4;
+
+
+import java.io.FileNotFoundException;//Exception needed to read from files.
+import java.util.Scanner;//Scanner utility tool(Input).
+public class Mainscript{
+
+    public static void main(String[] args) throws FileNotFoundException {
+        Scanner a_scan = new Scanner(System.in);//Calling the scanner for terminal input.
+        char response = a_scan.next().charAt(0);//Calling the scanner input function.
+
+        P4general_tree a_tree = new P4Util.BinaryTree();//Dynamically allocating a new binary tree from the ABC.
+        general_list a_list;
+        a_list = new List();//Dynamically allocating a new list object(Linear Linked List of Arrays).
+
+        Info[] postings = new Info[3];//Needed to find matching items in the tree.
+
+        //Load the monthly postings into the BST. PROGRAM 4//////////////////////////////////////////////////////
+        Info obj = new Agriculture("Agriculture","Multnomah",1);//Using a constructor with Arguments.
+        postings[0] = a_tree.build_tree(1,response,obj);//Calling the build_tree function(Insert).
+        System.out.println();
+        Info health_ref = new Healthcare("Healthcare","Columbia",2);
+        postings[1] = a_tree.build_tree(2,response,health_ref);//Calling the build_tree/Insert function.
+        System.out.println();
+        Info deliv_ref = new Delivery("Delivery","USA",3);
+        postings[2] = a_tree.build_tree(3,response,deliv_ref);//Build/Insert a delivery type object.
+        System.out.println("\nHere is the monthly postings(BST/Program4:");
+        System.out.println("----------------------------------------------------------------------------------------\n");
+        a_tree.display_tree(deliv_ref);//Calling the upcasted display for a Delivery object.
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////
+        System.out.println("----------------------------------------------------------------------------------------\n");
+
+        System.out.println("The Services in the tree are posted weekly. Please load your requests into the search log:");
+        a_list.build_list();//Build the search log. Everything is read from a text file.
+        a_list.display_list();//Display the list.
+        System.out.println("Your search log has loaded successfully. Would you like to look for matching services in the tree?");
+
+
+        a_list.findMatch(postings);//Check to see if the BST has any postings that match your search log.
+        System.out.println("The service has been removed. Here are your remaining requests: \n");
+
+        System.out.println("----------------------------------------------------------------------------------------\n");
+        a_list.display_list();//Display the remaining list.
+        System.out.println("----------------------------------------------------------------------------------------\n");
+    }
+
+}
+
